@@ -46,24 +46,39 @@ ${HARMONIC_SUMMARY}
 1. 뉴스/이벤트 기반 모멘텀 평가
 2. RSI, 볼린저 밴드 해설
 3. 하모닉 패턴(AB=CD, 5-0 등) 형성 가능성 분석 (PRZ, C/D 후보 포함)
-4. 단기/중장기 매수·매도·관망 전략 결론
+4. 단기/중장기 매수·매도·관망 전략 결론 (반드시 구체적 가격 수치 포함)
+
+반드시 리포트 마지막에 아래 형식의 JSON 블록을 추가하세요 (구분자 정확히 사용):
+---PRICES_JSON---
+{"entryPrice": 진입가숫자, "target1": 1차목표가숫자, "target2": 2차목표가숫자, "stopLoss": 손절가숫자}
     `;
 
     const t2 = Date.now();
-    // Use gemini-2.5-flash which is much faster
+    // Use gemini-flash-latest which is much faster
     const response = await ai.models.generateContent({
-      model: "gemini-2.5-flash",
+      model: "gemini-flash-latest",
       contents: prompt,
     });
     const t3 = Date.now();
     const aiGenerationTime = t3 - t2;
 
-    const report = response.text || "";
+    let fullText = response.text || "";
     const confidenceScore = Math.floor(Math.random() * 20) + 80;
 
+    // Parse prices JSON block
+    let prices: Record<string, number> = {};
+    const priceMatch = fullText.match(/---PRICES_JSON---[\s\n]*(\{[^}]+\})/)
+    if (priceMatch) {
+      try {
+        prices = JSON.parse(priceMatch[1]);
+      } catch {}
+      fullText = fullText.replace(/---PRICES_JSON---[\s\S]*$/, "").trim();
+    }
+
     return NextResponse.json({ 
-        report, 
+        report: fullText, 
         confidenceScore,
+        prices,
         durations: {
             dataPrep: dataPrepTime,
             aiGeneration: aiGenerationTime,

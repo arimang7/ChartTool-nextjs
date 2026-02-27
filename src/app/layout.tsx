@@ -13,7 +13,6 @@ const geistMono = Geist_Mono({
 });
 
 import { Providers } from "@/components/providers";
-import { Sidebar } from "@/components/sidebar";
 
 export const metadata: Metadata = {
   title: "AI 주식 분석 도구",
@@ -31,14 +30,10 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-black text-white`}
       >
         <Providers>
-          <div className="flex min-h-screen">
-            <Sidebar />
-            <main className="flex-1 overflow-auto">
-              {children}
-            </main>
-          </div>
+          {children}
         </Providers>
       </body>
     </html>
   );
 }
+
