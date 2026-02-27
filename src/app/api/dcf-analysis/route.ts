@@ -39,23 +39,38 @@ ${dcfInstructions}
 - RSI(14): ${rsi}
 
 위 가이드라인에 따라 즉시 분석 결과를 출력해 주세요. 서론이나 준비 멘트 없이 바로 본론(10 Key Points)으로 시작하세요.
+
+반드시 리포트 마지막에 아래 형식의 JSON 블록을 추가하세요 (구분자 정확히 사용):
+---PRICES_JSON---
+{"fairValue": 적정주가숫자, "bullishValue": 강세시적정가숫자, "bearishValue": 약세시적정가숫자}
     `;
 
     const t2 = Date.now();
     const response = await ai.models.generateContent({
-      model: "gemini-2.5-flash",
+      model: "gemini-flash-latest",
       contents: prompt,
     });
     const t3 = Date.now();
     const aiGenerationTime = t3 - t2;
 
-    const report = response.text || "";
+    let fullText = response.text || "";
     // DCF is fixed high confidence
     const confidenceScore = 95;
 
+    // Parse prices JSON block
+    let prices: Record<string, number> = {};
+    const priceMatch = fullText.match(/---PRICES_JSON---[\s\n]*(\{[^}]+\})/)
+    if (priceMatch) {
+      try {
+        prices = JSON.parse(priceMatch[1]);
+      } catch {}
+      fullText = fullText.replace(/---PRICES_JSON---[\s\S]*$/, "").trim();
+    }
+
     return NextResponse.json({ 
-        report, 
+        report: fullText, 
         confidenceScore,
+        prices,
         durations: {
             dataPrep: dataPrepTime,
             aiGeneration: aiGenerationTime,
