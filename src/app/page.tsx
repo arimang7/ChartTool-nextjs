@@ -221,7 +221,7 @@ export default function Home() {
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
           {/* Chart Section */}
           <div className="lg:col-span-3 flex flex-col gap-4">
-               <div className="bg-slate-900 rounded-lg p-4 h-[600px] overflow-hidden">
+               <div className="bg-card/50 backdrop-blur-xl border border-white/5 rounded-2xl p-4 h-[600px] overflow-hidden">
                  <Plot
               className="w-full h-full"
               data={[
@@ -232,14 +232,24 @@ export default function Home() {
                   low: data.map(d => d.low) as any[],
                   open: data.map(d => d.open) as any[],
                   type: 'candlestick',
-                  name: 'Price'
+                  name: 'Price',
+                  increasing: { line: { color: '#00f2ff' }, fillcolor: '#00f2ff' },
+                  decreasing: { line: { color: '#ff3d71' }, fillcolor: '#ff3d71' }
+                },
+                {
+                  x: data.map(d => d.date) as any[],
+                  y: data.map(d => d.MA20) as any[],
+                  type: 'scatter',
+                  mode: 'lines',
+                  line: { color: '#ffd700', dash: 'dash', width: 1.2 },
+                  name: 'MA20'
                 },
                 {
                   x: data.map(d => d.date) as any[],
                   y: data.map(d => d.Upper) as any[],
                   type: 'scatter',
                   mode: 'lines',
-                  line: { color: 'rgba(173, 216, 230, 0.5)' },
+                  line: { color: 'rgba(99, 102, 241, 0.5)', width: 1 },
                   name: 'Upper Band'
                 },
                 {
@@ -248,8 +258,8 @@ export default function Home() {
                   type: 'scatter',
                   mode: 'lines',
                   fill: 'tonexty',
-                  fillcolor: 'rgba(173, 216, 230, 0.1)',
-                  line: { color: 'rgba(173, 216, 230, 0.5)' },
+                  fillcolor: 'rgba(99, 102, 241, 0.05)',
+                  line: { color: 'rgba(99, 102, 241, 0.5)', width: 1 },
                   name: 'Lower Band'
                 }
               ] as any[]}
@@ -284,8 +294,28 @@ export default function Home() {
                   template: 'plotly_dark',
                   paper_bgcolor: 'rgba(0,0,0,0)',
                   plot_bgcolor: 'rgba(0,0,0,0)',
-                  margin: { t: 10, l: 40, r: 80, b: 40 },
-                  xaxis: { rangeslider: { visible: false } },
+                  margin: { t: 40, l: 50, r: 50, b: 100 },
+                  font: { family: 'inherit', color: '#94a3b8', size: 10 },
+                  xaxis: { 
+                    rangeslider: { visible: false },
+                    gridcolor: 'rgba(255,255,255,0.03)',
+                    zeroline: false,
+                    showline: false
+                  },
+                  yaxis: { 
+                    gridcolor: 'rgba(255,255,255,0.03)',
+                    zeroline: false,
+                    showline: false,
+                    side: 'right'
+                  },
+                  legend: {
+                    orientation: 'h',
+                    y: -0.2,
+                    x: 0.5,
+                    xanchor: 'center',
+                    font: { size: 10 }
+                  },
+                  hovermode: 'x unified',
                   shapes: [
                     ...data.filter(d => d.Vol_Spike).map(d => ({
                       type: 'rect', xref: 'x', yref: 'paper',
@@ -306,24 +336,24 @@ export default function Home() {
           {/* Metrics Section */}
           <div className="flex flex-col gap-4">
             <h3 className="text-xl font-bold mb-2">주요 지표</h3>
-            <div className="bg-slate-900 p-4 rounded-lg">
-              <div className="text-slate-400 text-sm mb-1">현재가</div>
-              <div className="text-2xl font-bold text-yellow-400">
+            <div className="bg-card border border-white/5 p-5 rounded-2xl shadow-sm">
+              <div className="text-slate-400 text-sm mb-2 font-medium">현재가</div>
+              <div className="text-3xl font-bold text-[#a5b4fc]">
                 {currentTicker.includes(".KS") || currentTicker.includes(".KQ") ? "₩" : "$"}
                 {currentTicker.includes(".KS") || currentTicker.includes(".KQ")
-                  ? latestData.close.toLocaleString()
-                  : latestData.close.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                   ? latestData.close.toLocaleString()
+                   : latestData.close.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
               </div>
             </div>
-            <div className="bg-slate-900 p-4 rounded-lg">
-              <div className="text-slate-400 text-sm mb-1">RSI(14)</div>
-              <div className="text-2xl font-bold text-emerald-400">
+            <div className="bg-card border border-white/5 p-5 rounded-2xl shadow-sm">
+              <div className="text-slate-400 text-sm mb-2 font-medium">RSI(14)</div>
+              <div className="text-3xl font-bold text-[#a5b4fc]">
                 {latestData.RSI !== null && latestData.RSI !== undefined ? latestData.RSI.toFixed(2) : "N/A"}
               </div>
             </div>
-            <div className="bg-slate-900 p-4 rounded-lg">
-              <div className="text-slate-400 text-sm mb-1">볼린저 밴드 상/하단</div>
-              <div className="text-xl font-bold text-blue-400">
+            <div className="bg-card border border-white/5 p-5 rounded-2xl shadow-sm">
+              <div className="text-slate-400 text-sm mb-2 font-medium">볼린저 밴드 상/하단</div>
+              <div className="text-xl font-bold text-[#a5b4fc]">
                 {latestData.Upper?.toFixed(1) || "N/A"} / {latestData.Lower?.toFixed(1) || "N/A"}
               </div>
             </div>
@@ -359,7 +389,7 @@ export default function Home() {
 
           {/* Analysis Progress Steps */}
           {analysisSteps.length > 0 && (
-            <div className="bg-slate-900/80 border border-slate-700 rounded-lg p-5 mb-6">
+            <div className="bg-card/50 border border-white/5 backdrop-blur-md rounded-2xl p-6 mb-6">
               <div className="space-y-3">
                 {analysisSteps.map((s) => (
                   <div key={s.step} className="flex items-center gap-3">
@@ -384,7 +414,7 @@ export default function Home() {
 
           {/* AI Report */}
           {aiReport && !aiLoading && (
-            <div className="bg-slate-900 p-6 rounded-lg border border-slate-700">
+            <div className="bg-card border border-white/5 p-8 rounded-2xl shadow-xl">
                <div className="flex items-center gap-3 mb-6 pb-4 border-b border-slate-800">
                  <Sparkles className="text-yellow-400 w-6 h-6" />
                  <h2 className="text-2xl font-bold">{aiType === "General" ? "AI 심층 분석 리포트" : "DCF 전문 분석 리포트"}</h2>

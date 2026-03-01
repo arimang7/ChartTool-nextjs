@@ -121,7 +121,7 @@ export function Sidebar({ onSearch, news = [], loading }: SidebarProps) {
   };
 
   return (
-    <div className="w-72 bg-slate-900 text-white min-h-screen p-4 flex flex-col border-r border-slate-800 overflow-y-auto">
+    <div className="w-72 bg-sidebar text-white min-h-screen p-4 flex flex-col border-r border-white/5 overflow-y-auto">
       {/* Logo */}
       <div className="flex items-center gap-2 mb-6">
         <LineChart className="w-7 h-7 text-blue-400" />
