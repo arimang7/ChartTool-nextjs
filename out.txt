@@ -1,0 +1,1 @@
+ERROR: yahooFinance.historical called with invalid options.
