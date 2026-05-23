@@ -16,7 +16,7 @@ const HARMONIC_SUMMARY = `
 
 export async function POST(req: NextRequest) {
   try {
-    const { ticker, name, currentPrice, rsi, upper, lower, history = [], news = [], model = "gemini-2.5-flash" } = await req.json();
+    const { ticker, name, currentPrice, rsi, upper, lower, history = [], news = [], model = "gemini-3.5-flash" } = await req.json();
 
     const date = new Date().toISOString().split("T")[0];
     
@@ -50,7 +50,7 @@ ${HARMONIC_SUMMARY}
     `;
 
     const t2 = Date.now();
-    // Use model selected by user (default: gemini-2.5-flash)
+    // Use model selected by user (default: gemini-3.5-flash)
     const response = await ai.models.generateContent({
       model: model,
       contents: prompt,

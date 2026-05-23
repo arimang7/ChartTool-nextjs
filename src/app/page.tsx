@@ -21,7 +21,7 @@ export default function Home() {
   const [aiScore, setAiScore] = useState<number | null>(null);
   const [aiLoading, setAiLoading] = useState(false);
   const [aiType, setAiType] = useState<"General" | "DCF" | "">("")
-  const [selectedModel, setSelectedModel] = useState("gemini-3.1-flash-lite-preview");
+  const [selectedModel, setSelectedModel] = useState("gemini-3.5-flash");
   const [aiDurations, setAiDurations] = useState<{dataPrep: number, aiGeneration: number, total: number} | null>(null);
   const [aiElapsed, setAiElapsed] = useState("0.0");
   const [sendingTelegram, setSendingTelegram] = useState(false);
